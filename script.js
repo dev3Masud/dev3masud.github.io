@@ -5,8 +5,14 @@
    language tags, handles live search/filters, and manages skeleton states.
    ========================================================================== */
 
-const GITHUB_USERNAME = 'dev3Masud';
-const REPOS_API_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`;
+// Auto-detect username dynamically from the URL if hosted on GitHub Pages
+let githubUsername = 'dev3Masud';
+const hostname = window.location.hostname.toLowerCase();
+if (hostname.endsWith('.github.io')) {
+  githubUsername = hostname.split('.')[0];
+}
+
+const REPOS_API_URL = `https://api.github.com/users/${githubUsername}/repos?per_page=100&sort=updated`;
 
 // Color codes for languages
 const LANG_COLORS = {
@@ -57,7 +63,14 @@ async function fetchGitHubPortfolio() {
     const data = await response.json();
     
     // Filter out forks if desired, or sort by stars / updates
-    repositories = data.filter(repo => !repo.fork);
+    // Filter out forks, profile README repository, and the github.io portfolio repository itself
+    const profileRepo = githubUsername.toLowerCase();
+    const portfolioRepo = `${githubUsername.toLowerCase()}.github.io`;
+    
+    repositories = data.filter(repo => {
+      const nameLower = repo.name.toLowerCase();
+      return !repo.fork && nameLower !== profileRepo && nameLower !== portfolioRepo;
+    });
     
     calculateStats(data);
     renderFilters();
@@ -182,7 +195,7 @@ function renderProjects() {
     // Page/Live Demo link
     let liveDemoLinkHtml = '';
     if (repo.has_pages) {
-      const pageUrl = `https://${GITHUB_USERNAME.toLowerCase()}.github.io/${repo.name}/`;
+      const pageUrl = `https://${githubUsername.toLowerCase()}.github.io/${repo.name}/`;
       liveDemoLinkHtml = `
         <a href="${pageUrl}" target="_blank" class="project-link-btn" title="Live Website">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
@@ -248,8 +261,8 @@ function renderErrorState() {
       <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 2rem;">
         We could not load the live repositories right now because GitHub's public API is temporarily rate-limited. You can visit the repositories directly on GitHub.
       </p>
-      <a href="https://github.com/${GITHUB_USERNAME}" target="_blank" class="btn btn-primary">
-        Go to dev3Masud on GitHub
+      <a href="https://github.com/${githubUsername}" target="_blank" class="btn btn-primary">
+        Go to ${githubUsername} on GitHub
       </a>
     </div>
   `;
