@@ -214,41 +214,43 @@ function setFooterYear() {
 // ═══════════════════════════════════════════════════════════════════════════
 function injectContribImages() {
   const u = GITHUB_USERNAME;
-  const theme = 'github_dark';
-  const bg = '00000000';
+  const bg = '0c0e1a'; // Exact match for --bg-1 card color
+  const text = '94a3b8'; // Slate text color
+  const title = 'a855f7'; // Purple title
+  const icon = '06b6d4'; // Cyan icons
 
   // Contribution graph via ghchart.rshah.org
   const contribGraph = document.getElementById('contrib-graph');
   if (contribGraph) {
     contribGraph.src = `https://ghchart.rshah.org/6366f1/${u}`;
     contribGraph.onerror = function() {
-      this.src = `https://github-readme-stats.vercel.app/api?username=${u}&show_icons=true&theme=${theme}&hide_border=true&bg_color=${bg}&count_private=true`;
+      this.src = `https://github-readme-stats.vercel.app/api?username=${u}&show_icons=true&hide_border=true&bg_color=${bg}&count_private=true&icon_color=${icon}&title_color=${title}&text_color=${text}`;
     };
   }
 
-  // Streak stats
+  // Streak stats (custom colors to blend perfectly)
   const streakImg = document.getElementById('streak-img');
   if (streakImg) {
-    streakImg.src = `https://streak-stats.demolab.com/?user=${u}&theme=${theme}&hide_border=true&background=${bg}&ring=6366f1&fire=a855f7&currStreakLabel=06b6d4`;
+    streakImg.src = `https://streak-stats.demolab.com/?user=${u}&hide_border=true&background=${bg}&ring=${icon}&fire=${title}&currStreakLabel=${text}&sideLabels=${text}&dates=${text}&currStreakNum=f1f5f9&sideNums=f1f5f9`;
     streakImg.onerror = function() {
       this.style.display = 'none';
       this.closest('.contrib-card').style.display = 'none';
     };
   }
 
-  // GitHub Stats card
+  // GitHub Stats card (custom colors)
   const statsImg = document.getElementById('stats-img');
   if (statsImg) {
-    statsImg.src = `https://github-readme-stats.vercel.app/api?username=${u}&show_icons=true&theme=${theme}&hide_border=true&bg_color=${bg}&count_private=true&include_all_commits=true&icon_color=6366f1&title_color=a855f7&text_color=94a3b8`;
+    statsImg.src = `https://github-readme-stats.vercel.app/api?username=${u}&show_icons=true&hide_border=true&bg_color=${bg}&count_private=true&include_all_commits=true&icon_color=${icon}&title_color=${title}&text_color=${text}`;
     statsImg.onerror = function() {
       this.closest('.contrib-card').style.display = 'none';
     };
   }
 
-  // Top Languages
+  // Top Languages (custom colors)
   const langsImg = document.getElementById('langs-img');
   if (langsImg) {
-    langsImg.src = `https://github-readme-stats.vercel.app/api/top-langs/?username=${u}&layout=compact&theme=${theme}&hide_border=true&bg_color=${bg}&title_color=a855f7&text_color=94a3b8&langs_count=8`;
+    langsImg.src = `https://github-readme-stats.vercel.app/api/top-langs/?username=${u}&layout=compact&hide_border=true&bg_color=${bg}&title_color=${title}&text_color=${text}&icon_color=${icon}&langs_count=8`;
     langsImg.onerror = function() {
       this.closest('.contrib-card').style.display = 'none';
     };

@@ -523,15 +523,32 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .contrib-card-title { font-size: 0.9rem; font-weight: 700; color: var(--text-1); }
 .contrib-card-sub   { font-size: 0.78rem; color: var(--text-3); }
-.contrib-img-wrapper { border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.2); }
-.contrib-img {
-  width: 100%; height: auto; display: block;
+.contrib-img-wrapper {
   border-radius: 12px;
+  overflow: hidden;
+  background: #0c0e1a; /* Exact match for var(--bg-1) */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+.contrib-img {
+  max-width: 96%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
   transition: opacity 0.5s;
 }
 
+/* Beautifully dark-mode-ify the rshah chart using CSS filters */
+#contrib-graph {
+  filter: invert(0.9) hue-rotate(190deg) brightness(0.95) contrast(1.2);
+  mix-blend-mode: screen;
+  padding: 0.5rem 1rem;
+}
+
 /* Trophies */
-.trophy-section { text-align: center; }
+.trophy-section { text-align: center; margin-top: 3rem; }
 .trophy-wrapper {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
