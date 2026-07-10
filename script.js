@@ -144,22 +144,31 @@ function animateValue(obj, start, end, duration) {
 
 // Render unique language tags dynamically based on fetched repos
 function renderFilters() {
-  const languages = new Set(['All']);
+  const filterOptions = ['All'];
+  if (repositories.some(repo => repo.has_pages)) {
+    filterOptions.push('Live Demos');
+  }
   repositories.forEach(repo => {
-    if (repo.language) {
-      languages.add(repo.language);
+    if (repo.language && !filterOptions.includes(repo.language)) {
+      filterOptions.push(repo.language);
     }
   });
 
   filterTagsContainer.innerHTML = '';
-  languages.forEach(lang => {
+  filterOptions.forEach(opt => {
     const btn = document.createElement('button');
-    btn.className = `filter-btn ${lang === activeFilter ? 'active' : ''}`;
-    btn.textContent = lang;
+    if (opt === 'Live Demos') {
+      btn.className = `filter-btn filter-btn-live ${opt === activeFilter ? 'active' : ''}`;
+      btn.innerHTML = `🌐 ${opt}`;
+    } else {
+      btn.className = `filter-btn ${opt === activeFilter ? 'active' : ''}`;
+      btn.textContent = opt;
+    }
+    
     btn.addEventListener('click', () => {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      activeFilter = lang;
+      activeFilter = opt;
       renderProjects();
     });
     filterTagsContainer.appendChild(btn);
@@ -172,7 +181,8 @@ function renderProjects() {
   
   // Filter repositories
   const filtered = repositories.filter(repo => {
-    const matchesLang = activeFilter === 'All' || repo.language === activeFilter;
+    const matchesLang = activeFilter === 'All' || 
+                        (activeFilter === 'Live Demos' ? repo.has_pages : repo.language === activeFilter);
     const matchesSearch = repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           (repo.description && repo.description.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesLang && matchesSearch;
@@ -190,7 +200,7 @@ function renderProjects() {
 
   filtered.forEach(repo => {
     const card = document.createElement('div');
-    card.className = 'project-card';
+    card.className = repo.has_pages ? 'project-card live-site-card' : 'project-card';
     
     const langDotColor = LANG_COLORS[repo.language] || '#64748b';
     
@@ -199,17 +209,30 @@ function renderProjects() {
     if (repo.has_pages) {
       const pageUrl = `https://${githubUsername.toLowerCase()}.github.io/${repo.name}/`;
       liveDemoLinkHtml = `
-        <a href="${pageUrl}" target="_blank" class="project-link-btn" title="Live Website">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        <a href="${pageUrl}" target="_blank" class="btn btn-primary btn-sm" style="padding: 0.45rem 1.1rem; font-size: 0.8rem; box-shadow: 0 4px 10px rgba(6, 182, 212, 0.25); background: linear-gradient(135deg, var(--accent-cyan), var(--accent-primary)); border: none; border-radius: 8px; color: var(--text-primary); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center;">
+          Visit Site
         </a>
       `;
     }
 
     card.innerHTML = `
+      ${repo.has_pages ? '<div class="live-card-glow"></div>' : ''}
       <div>
         <div class="project-meta">
-          <div class="project-folder-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div class="project-folder-icon" style="${repo.has_pages ? 'color: var(--accent-cyan);' : ''}">
+              ${repo.has_pages ? `
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+              ` : `
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+              `}
+            </div>
+            ${repo.has_pages ? `
+              <span class="live-badge">
+                <span class="live-badge-dot"></span>
+                LIVE DEMO
+              </span>
+            ` : ''}
           </div>
           <div class="project-stats">
             <div class="project-stat-item" title="Stars">
@@ -234,9 +257,9 @@ function renderProjects() {
             <span>${repo.language}</span>
           ` : ''}
         </div>
-        <div class="project-links">
+        <div class="project-links" style="display: flex; align-items: center;">
           ${liveDemoLinkHtml}
-          <a href="${repo.html_url}" target="_blank" class="project-link-btn" title="View Source Code">
+          <a href="${repo.html_url}" target="_blank" class="project-link-btn" title="View Source Code" style="margin-left: 0.75rem; display: inline-flex; align-items: center;">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
           </a>
         </div>
