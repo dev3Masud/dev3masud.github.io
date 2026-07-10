@@ -4,187 +4,456 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>dev3Masud | Software Engineer Portfolio</title>
-  
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Personal software engineering portfolio of dev3Masud. Live showcase of active repositories, open-source projects, and automated DNS blocklists.">
-  <meta name="keywords" content="dev3Masud, Software Engineer, Portfolio, Developer, GitHub, DNS Blocklist, Python, Web Developer">
+
+  <!-- SEO -->
+  <meta name="description" content="dev3Masud — Software Engineer & Open Source Developer. Live GitHub stats, repositories, contributions, and demos.">
+  <meta name="keywords" content="dev3Masud, Software Engineer, Portfolio, GitHub, Python, Security, Automation, DNS Blocklist">
   <meta name="author" content="dev3Masud">
-  
-  <!-- Open Graph / Social Media Meta Tags -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="dev3Masud | Software Engineer Portfolio">
-  <meta property="og:description" content="Discover repositories, tools, and open-source project developments of dev3Masud.">
+  <meta property="og:title" content="dev3Masud | GitHub Portfolio">
+  <meta property="og:description" content="Next-level developer portfolio with live GitHub stats, contribution tracking, projects, and more.">
   <meta property="og:url" content="https://dev3masud.github.io/">
-  
-  <!-- CSS Stylesheet -->
+  <meta property="og:image" content="https://github.com/dev3Masud.png">
+  <meta name="theme-color" content="#0a0b10">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Dynamic Glowing Backdrop Blobs -->
-  <div class="bg-glow-container" aria-hidden="true">
-    <div class="bg-glow-blob blob-1"></div>
-    <div class="bg-glow-blob blob-2"></div>
+  <!-- Animated background -->
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+    <canvas id="particle-canvas"></canvas>
   </div>
 
-  <!-- Navigation Menu Header -->
-  <header>
-    <div class="nav-container">
-      <div class="logo">dev3Masud</div>
+  <!-- NAVIGATION -->
+  <header id="site-header">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-bracket">&lt;</span>dev3Masud<span class="logo-bracket">/&gt;</span>
+      </div>
       <nav aria-label="Main Navigation">
-        <ul class="nav-links">
-          <li><a href="#about">About</a></li>
-          <li><a href="#projects">Projects</a></li>
-          <li><a href="#contact">Contact</a></li>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#stats" class="nav-link">Stats</a></li>
+          <li><a href="#contributions" class="nav-link">Contributions</a></li>
+          <li><a href="#live-sites" class="nav-link">Live Sites</a></li>
+          <li><a href="#repos" class="nav-link">Repos</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
       </nav>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </header>
 
   <main>
-    <!-- Hero Section -->
-    <section class="hero" id="about">
-      <div class="hero-card">
-        <div class="profile-avatar-wrapper">
-          <div class="avatar-glow"></div>
-          <!-- Dynamically fetches GitHub profile pic, displays placeholder initially -->
-          <img src="https://github.com/dev3Masud.png" alt="dev3Masud Avatar" class="profile-avatar" onerror="this.src='https://avatars.githubusercontent.com/u/41898282?v=4'">
+
+    <!-- ═══════════════ HERO SECTION ═══════════════ -->
+    <section class="hero-section" id="about">
+      <div class="hero-inner">
+
+        <!-- Left: Profile Card -->
+        <div class="profile-card reveal-item">
+          <div class="profile-avatar-frame">
+            <div class="avatar-ring"></div>
+            <img id="profile-avatar" src="https://github.com/dev3Masud.png" alt="dev3Masud GitHub Avatar" class="profile-avatar">
+            <div class="online-indicator" title="Open to work"></div>
+          </div>
+
+          <div class="profile-info">
+            <h1 class="profile-name" id="profile-name">dev3Masud</h1>
+            <p class="profile-login" id="profile-login">@dev3Masud</p>
+            <p class="profile-bio" id="profile-bio">Software Engineer &amp; Open Source Developer</p>
+
+            <div class="profile-meta-grid">
+              <div class="meta-item" id="meta-location" style="display:none">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span id="profile-location"></span>
+              </div>
+              <div class="meta-item" id="meta-company" style="display:none">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span id="profile-company"></span>
+              </div>
+              <div class="meta-item" id="meta-blog" style="display:none">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                <a id="profile-blog" href="#" target="_blank" rel="noopener noreferrer"></a>
+              </div>
+              <div class="meta-item">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span>Joined <span id="profile-joined">GitHub</span></span>
+              </div>
+            </div>
+
+            <div class="profile-social-row">
+              <div class="social-stat">
+                <span class="social-count" id="profile-followers">—</span>
+                <span class="social-label">Followers</span>
+              </div>
+              <div class="social-divider"></div>
+              <div class="social-stat">
+                <span class="social-count" id="profile-following">—</span>
+                <span class="social-label">Following</span>
+              </div>
+              <div class="social-divider"></div>
+              <div class="social-stat">
+                <span class="social-count" id="profile-gists">—</span>
+                <span class="social-label">Gists</span>
+              </div>
+            </div>
+
+            <div class="profile-actions">
+              <a href="https://github.com/dev3Masud" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="profile-gh-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                GitHub Profile
+              </a>
+              <a href="#repos" class="btn btn-ghost">View Repos</a>
+            </div>
+          </div>
         </div>
-        <div class="hero-text">
-          <h1>Hi, I'm <span>dev3Masud</span></h1>
-          <div class="hero-title-sub" id="typewriter">Software Engineer & Open Source Developer</div>
-          <p class="hero-desc">
+
+        <!-- Right: Hero Content -->
+        <div class="hero-content reveal-item" style="transition-delay: 0.15s">
+          <div class="hero-badge">
+            <span class="badge-pulse"></span>
+            Open to Opportunities
+          </div>
+          <h2 class="hero-headline">
+            Hi, I'm <span class="gradient-text" id="hero-name">dev3Masud</span>
+          </h2>
+          <div class="typewriter-wrapper">
+            <span id="typewriter"></span><span class="cursor">|</span>
+          </div>
+          <p class="hero-desc" id="hero-bio">
             Passionate about building highly optimized backends, automated intelligence pipelines, web applications, and DNS blocklists/security filters. Currently developing secure automation systems.
           </p>
-          <div class="btn-group">
-            <a href="#projects" class="btn btn-primary">
-              <span>View Projects</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            </a>
-            <a href="https://github.com/dev3Masud" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-              <span>GitHub Profile</span>
-            </a>
+
+          <!-- Tech Stack Pills -->
+          <div class="tech-stack">
+            <span class="tech-pill">Python</span>
+            <span class="tech-pill">Automation</span>
+            <span class="tech-pill">Security</span>
+            <span class="tech-pill">DNS Filtering</span>
+            <span class="tech-pill">Web Dev</span>
+            <span class="tech-pill">Open Source</span>
+          </div>
+
+          <!-- Quick Hero Stats -->
+          <div class="hero-quick-stats">
+            <div class="qs-item">
+              <span class="qs-num" id="qs-repos">—</span>
+              <span class="qs-label">Repos</span>
+            </div>
+            <div class="qs-item">
+              <span class="qs-num" id="qs-stars">—</span>
+              <span class="qs-label">Stars</span>
+            </div>
+            <div class="qs-item">
+              <span class="qs-num" id="qs-pages">—</span>
+              <span class="qs-label">Live Sites</span>
+            </div>
+            <div class="qs-item">
+              <span class="qs-num" id="qs-forks">—</span>
+              <span class="qs-label">Forks</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════ STATS DASHBOARD ═══════════════ -->
+    <section class="section stats-section" id="stats">
+      <div class="section-container">
+        <div class="section-label reveal-item">📊 GitHub Analytics</div>
+        <h2 class="section-title reveal-item">Profile <span class="gradient-text">Dashboard</span></h2>
+        <p class="section-sub reveal-item">Live metrics fetched directly from the GitHub API</p>
+
+        <!-- Main Stats Grid -->
+        <div class="stats-mega-grid">
+          <div class="stat-card reveal-item" style="transition-delay:0.05s">
+            <div class="stat-icon stat-icon-blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            <div class="stat-val" id="stat-repos">—</div>
+            <div class="stat-lbl">Total Repositories</div>
+          </div>
+          <div class="stat-card reveal-item" style="transition-delay:0.10s">
+            <div class="stat-icon stat-icon-yellow">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <div class="stat-val" id="stat-stars">—</div>
+            <div class="stat-lbl">Total Stars</div>
+          </div>
+          <div class="stat-card reveal-item" style="transition-delay:0.15s">
+            <div class="stat-icon stat-icon-purple">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 15V9a4 4 0 0 0-4-4H9"></path><line x1="6" y1="9" x2="6" y2="15"></line></svg>
+            </div>
+            <div class="stat-val" id="stat-forks">—</div>
+            <div class="stat-lbl">Total Forks</div>
+          </div>
+          <div class="stat-card reveal-item" style="transition-delay:0.20s">
+            <div class="stat-icon stat-icon-cyan">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            </div>
+            <div class="stat-val" id="stat-pages">—</div>
+            <div class="stat-lbl">GitHub Pages</div>
+          </div>
+          <div class="stat-card reveal-item" style="transition-delay:0.25s">
+            <div class="stat-icon stat-icon-green">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <div class="stat-val" id="stat-followers">—</div>
+            <div class="stat-lbl">Followers</div>
+          </div>
+          <div class="stat-card reveal-item" style="transition-delay:0.30s">
+            <div class="stat-icon stat-icon-orange">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            </div>
+            <div class="stat-val" id="stat-watchers">—</div>
+            <div class="stat-lbl">Total Watchers</div>
+          </div>
+          <div class="stat-card reveal-item" style="transition-delay:0.35s">
+            <div class="stat-icon stat-icon-pink">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+            <div class="stat-val" id="stat-account-age">—</div>
+            <div class="stat-lbl">Account Age</div>
+          </div>
+          <div class="stat-card reveal-item" style="transition-delay:0.40s">
+            <div class="stat-icon stat-icon-indigo">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            </div>
+            <div class="stat-val" id="stat-top-lang">—</div>
+            <div class="stat-lbl">Top Language</div>
+          </div>
+        </div>
+
+        <!-- Language Breakdown Bar -->
+        <div class="lang-breakdown-card reveal-item">
+          <div class="lang-breakdown-header">
+            <span class="lang-title">Language Distribution</span>
+            <span class="lang-subtitle" id="lang-total-repos">across repositories</span>
+          </div>
+          <div class="lang-bar" id="lang-bar">
+            <!-- Filled by JS -->
+          </div>
+          <div class="lang-legend" id="lang-legend">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+
+        <!-- Top Repos Podium -->
+        <div class="top-repos-section reveal-item">
+          <h3 class="subsection-title">🏆 Most Starred Repositories</h3>
+          <div class="top-repos-grid" id="top-repos-grid">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════ CONTRIBUTIONS SECTION ═══════════════ -->
+    <section class="section contributions-section" id="contributions">
+      <div class="section-container">
+        <div class="section-label reveal-item">📈 Activity Tracking</div>
+        <h2 class="section-title reveal-item">Contribution <span class="gradient-text">Overview</span></h2>
+        <p class="section-sub reveal-item">GitHub activity, streaks, and achievement trophies</p>
+
+        <div class="contrib-grid">
+          <!-- Contribution Graph -->
+          <div class="contrib-card contrib-wide reveal-item">
+            <div class="contrib-card-header">
+              <span class="contrib-card-title">Contribution Graph</span>
+              <span class="contrib-card-sub" id="contrib-year">2025–2026</span>
+            </div>
+            <div class="contrib-img-wrapper">
+              <img id="contrib-graph" src="" alt="GitHub Contribution Graph" class="contrib-img" loading="lazy">
+            </div>
+          </div>
+
+          <!-- Streak Stats -->
+          <div class="contrib-card reveal-item" style="transition-delay:0.1s">
+            <div class="contrib-card-header">
+              <span class="contrib-card-title">🔥 Commit Streak</span>
+            </div>
+            <div class="contrib-img-wrapper">
+              <img id="streak-img" src="" alt="GitHub Streak Stats" class="contrib-img" loading="lazy">
+            </div>
+          </div>
+
+          <!-- GitHub Stats Card -->
+          <div class="contrib-card reveal-item" style="transition-delay:0.2s">
+            <div class="contrib-card-header">
+              <span class="contrib-card-title">📊 GitHub Stats</span>
+            </div>
+            <div class="contrib-img-wrapper">
+              <img id="stats-img" src="" alt="GitHub Stats Card" class="contrib-img" loading="lazy">
+            </div>
+          </div>
+
+          <!-- Top Languages Card -->
+          <div class="contrib-card reveal-item" style="transition-delay:0.3s">
+            <div class="contrib-card-header">
+              <span class="contrib-card-title">💻 Top Languages</span>
+            </div>
+            <div class="contrib-img-wrapper">
+              <img id="langs-img" src="" alt="Top Languages" class="contrib-img" loading="lazy">
+            </div>
+          </div>
+        </div>
+
+        <!-- Trophies -->
+        <div class="trophy-section reveal-item">
+          <h3 class="subsection-title">🎖️ GitHub Trophies</h3>
+          <div class="trophy-wrapper">
+            <img id="trophy-img" src="" alt="GitHub Trophies" class="trophy-img" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════ LIVE SITES SECTION ═══════════════ -->
+    <section class="section live-section" id="live-sites" style="display:none">
+      <div class="section-container">
+        <div class="section-label reveal-item">🌐 Deployed Projects</div>
+        <h2 class="section-title reveal-item">Live <span class="gradient-text">Websites & Demos</span></h2>
+        <p class="section-sub reveal-item">Interactive projects with running GitHub Pages deployments</p>
+
+        <div class="live-grid" id="live-sites-grid">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════ REPOSITORIES SECTION ═══════════════ -->
+    <section class="section repos-section" id="repos">
+      <div class="section-container">
+        <div class="section-label reveal-item">📁 Source Code</div>
+        <h2 class="section-title reveal-item">My <span class="gradient-text">Repositories</span></h2>
+        <p class="section-sub reveal-item">Live repositories fetched directly from GitHub API</p>
+
+        <!-- Controls -->
+        <div class="repos-controls reveal-item">
+          <div class="search-wrapper">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="search-input" placeholder="Search repositories..." aria-label="Search repositories">
+          </div>
+          <div class="repos-right-controls">
+            <div class="filter-group" id="filter-tags" role="group" aria-label="Filter by language">
+              <button class="filter-btn active" data-filter="All">All</button>
+            </div>
+            <div class="sort-group">
+              <select id="sort-select" aria-label="Sort repositories">
+                <option value="updated">Recently Updated</option>
+                <option value="stars">Most Stars</option>
+                <option value="forks">Most Forks</option>
+                <option value="name">Name A–Z</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Repo Count -->
+        <div class="repos-meta reveal-item">
+          <span id="repos-count-label">Loading repositories…</span>
+        </div>
+
+        <!-- Repos Grid -->
+        <div class="repos-grid" id="repos-grid">
+          <!-- Skeleton loaders -->
+          <div class="repo-card skeleton-card" aria-hidden="true">
+            <div class="sk sk-icon"></div><div class="sk sk-tag"></div>
+            <div class="sk sk-title"></div><div class="sk sk-desc"></div>
+            <div class="sk sk-footer"></div>
+          </div>
+          <div class="repo-card skeleton-card" aria-hidden="true">
+            <div class="sk sk-icon"></div><div class="sk sk-tag"></div>
+            <div class="sk sk-title"></div><div class="sk sk-desc"></div>
+            <div class="sk sk-footer"></div>
+          </div>
+          <div class="repo-card skeleton-card" aria-hidden="true">
+            <div class="sk sk-icon"></div><div class="sk sk-tag"></div>
+            <div class="sk sk-title"></div><div class="sk sk-desc"></div>
+            <div class="sk sk-footer"></div>
+          </div>
+          <div class="repo-card skeleton-card" aria-hidden="true">
+            <div class="sk sk-icon"></div><div class="sk sk-tag"></div>
+            <div class="sk sk-title"></div><div class="sk sk-desc"></div>
+            <div class="sk sk-footer"></div>
+          </div>
+          <div class="repo-card skeleton-card" aria-hidden="true">
+            <div class="sk sk-icon"></div><div class="sk sk-tag"></div>
+            <div class="sk sk-title"></div><div class="sk sk-desc"></div>
+            <div class="sk sk-footer"></div>
+          </div>
+          <div class="repo-card skeleton-card" aria-hidden="true">
+            <div class="sk sk-icon"></div><div class="sk sk-tag"></div>
+            <div class="sk sk-title"></div><div class="sk sk-desc"></div>
+            <div class="sk sk-footer"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Statistics Panel -->
-    <section class="stats-section">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-num" id="stat-total-repos">0</div>
-          <div class="stat-label">Total Repositories</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num" id="stat-total-stars">0</div>
-          <div class="stat-label">Total Stars</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num" id="stat-top-lang">-</div>
-          <div class="stat-label">Top Language</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num" id="stat-active-days">-</div>
-          <div class="stat-label">Development Span</div>
+    <!-- ═══════════════ CONTACT SECTION ═══════════════ -->
+    <section class="section contact-section" id="contact">
+      <div class="section-container">
+        <div class="contact-card reveal-item">
+          <div class="contact-glow"></div>
+          <div class="contact-inner">
+            <div class="contact-emoji">👋</div>
+            <h2 class="contact-title">Let's Build Something <span class="gradient-text">Together</span></h2>
+            <p class="contact-desc">Open to discussing new projects, security research, automation systems, open-source collaboration, or partnerships.</p>
+            <div class="contact-btns">
+              <a href="mailto:devmasud@proton.me" class="btn btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                Email Me
+              </a>
+              <a href="https://github.com/dev3Masud" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                Follow on GitHub
+              </a>
+            </div>
+            <p class="contact-note">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              Usually responds within 24 hours
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Live Websites Showcase Section -->
-    <section class="live-sites-section" id="live-sites" style="display: none;">
-      <div class="section-header" style="max-width: 1200px; margin: 0 auto 2rem; padding: 0 2rem;">
-        <div>
-          <h2 class="section-title">🌐 Live <span>Websites & Demos</span></h2>
-          <p style="color: var(--text-secondary); margin-top: 0.5rem;">Interactive projects with live-running pages</p>
-        </div>
-      </div>
-      <div class="live-sites-grid" id="live-sites-grid" style="max-width: 1200px; margin: 0 auto 3rem; padding: 0 2rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem;">
-        <!-- Filled dynamically by JavaScript -->
-      </div>
-    </section>
-
-    <!-- Live Projects Section -->
-    <section class="projects-section" id="projects">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">My <span>Repositories</span></h2>
-          <p style="color: var(--text-secondary); margin-top: 0.5rem;">Live repositories fetched directly from GitHub</p>
-        </div>
-        
-        <div class="controls-wrapper">
-          <!-- Live Search Bar -->
-          <div class="search-box">
-            <input type="text" id="search-input" placeholder="Search repository by name or description..." aria-label="Search repositories">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          </div>
-          <!-- Language Filters -->
-          <div class="filter-tags" id="filter-tags" role="group" aria-label="Filter projects by language">
-            <button class="filter-btn active">All</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Projects Grid (Displays skeleton loaders by default, replaced by JS) -->
-      <div class="projects-grid" id="projects-grid">
-        <!-- Skeleton Card 1 -->
-        <div class="project-card skeleton-card" aria-hidden="true">
-          <div class="project-meta">
-            <div class="skeleton-pulse skeleton-folder"></div>
-            <div class="skeleton-pulse" style="width: 60px; height: 16px;"></div>
-          </div>
-          <div class="skeleton-pulse skeleton-title"></div>
-          <div class="skeleton-pulse skeleton-desc"></div>
-          <div class="skeleton-pulse skeleton-footer"></div>
-        </div>
-        <!-- Skeleton Card 2 -->
-        <div class="project-card skeleton-card" aria-hidden="true">
-          <div class="project-meta">
-            <div class="skeleton-pulse skeleton-folder"></div>
-            <div class="skeleton-pulse" style="width: 60px; height: 16px;"></div>
-          </div>
-          <div class="skeleton-pulse skeleton-title"></div>
-          <div class="skeleton-pulse skeleton-desc"></div>
-          <div class="skeleton-pulse skeleton-footer"></div>
-        </div>
-        <!-- Skeleton Card 3 -->
-        <div class="project-card skeleton-card" aria-hidden="true">
-          <div class="project-meta">
-            <div class="skeleton-pulse skeleton-folder"></div>
-            <div class="skeleton-pulse" style="width: 60px; height: 16px;"></div>
-          </div>
-          <div class="skeleton-pulse skeleton-title"></div>
-          <div class="skeleton-pulse skeleton-desc"></div>
-          <div class="skeleton-pulse skeleton-footer"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact-section" id="contact">
-      <div class="contact-card">
-        <h2>Get in Touch</h2>
-        <p>I am always open to discussing new projects, security concepts, automation builds, or partnerships.</p>
-        <div class="btn-group" style="justify-content: center;">
-          <a href="mailto:devmasud@proton.me" class="btn btn-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-            <span>Email Me</span>
-          </a>
-          <a href="https://github.com/dev3Masud" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-            <span>Follow on GitHub</span>
-          </a>
-        </div>
-      </div>
-    </section>
   </main>
 
-  <!-- Footer Section -->
-  <footer>
-    <p>&copy; 2026 dev3Masud. Built with HSL Design Accents & Glassmorphism UI.</p>
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span class="logo-bracket">&lt;</span>dev3Masud<span class="logo-bracket">/&gt;</span>
+      </div>
+      <p class="footer-copy">© <span id="footer-year">2026</span> dev3Masud — Built with passion, powered by GitHub API.</p>
+      <div class="footer-links">
+        <a href="https://github.com/dev3Masud" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        </a>
+        <a href="mailto:devmasud@proton.me" aria-label="Email">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        </a>
+      </div>
+    </div>
   </footer>
 
-  <!-- JS Logic -->
-  <script src="script.js?v=2.1.0"></script>
+  <script src="script.js?v=3.0.0"></script>
 </body>
 </html>
