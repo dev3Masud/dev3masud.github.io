@@ -319,10 +319,10 @@ function renderUserProfile(user) {
     setText('profile-joined', joined.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }));
   }
 
-  // Social counts
-  animateCount('profile-followers', 0, user.followers, 900);
-  animateCount('profile-following', 0, user.following, 900);
-  animateCount('profile-gists',     0, user.public_gists, 900);
+  // Profile card live stats — Repos count from user API (instant)
+  animateCount('profile-pub-repos', 0, user.public_repos || 0, 900);
+
+  // stars + live-sites are populated later by computeAndRenderStats after repos fetch
 
   // Account age for stats
   if (user.created_at) {
@@ -331,7 +331,7 @@ function renderUserProfile(user) {
     setText('stat-account-age', `${years}y`);
   }
 
-  // Followers in stats dashboard
+  // Followers count in stats dashboard (keep in the stats cards)
   animateCount('stat-followers', 0, user.followers, 1000);
 }
 
@@ -397,6 +397,10 @@ function computeAndRenderStats(rawData) {
   animateCount('qs-stars',  0, totalStars,      900);
   animateCount('qs-pages',  0, livePages,       900);
   animateCount('qs-forks',  0, totalForks,      900);
+
+  // Profile card live stats (stars + live sites come from repos API)
+  animateCount('profile-total-stars', 0, totalStars, 900);
+  animateCount('profile-live-sites',  0, livePages,  900);
 
   // Repos meta count
   setText('repos-count-label', `Showing ${allRepos.length} repositories`);
