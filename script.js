@@ -50,6 +50,7 @@ const activeDaysEl = document.getElementById('stat-active-days');
 document.addEventListener('DOMContentLoaded', () => {
   fetchGitHubPortfolio();
   setupSearch();
+  runTypewriter();
 });
 
 // Fetch data from GitHub API
@@ -74,6 +75,7 @@ async function fetchGitHubPortfolio() {
     
     calculateStats(data);
     renderFilters();
+    renderLiveSites();
     renderProjects();
     
   } catch (error) {
@@ -242,6 +244,71 @@ function renderProjects() {
     `;
     projectsGrid.appendChild(card);
   });
+  
+  setupScrollReveal();
+}
+
+// Render showcase of repos with GitHub Pages (Live sites)
+function renderLiveSites() {
+  const liveSitesGrid = document.getElementById('live-sites-grid');
+  const liveSitesSection = document.getElementById('live-sites');
+  
+  if (!liveSitesGrid) return;
+  
+  // Filter repositories that have pages enabled
+  const liveRepos = repositories.filter(repo => repo.has_pages);
+  
+  if (liveRepos.length === 0) {
+    liveSitesSection.style.display = 'none';
+    return;
+  }
+  
+  liveSitesSection.style.display = 'block';
+  liveSitesGrid.innerHTML = '';
+  
+  liveRepos.forEach(repo => {
+    const card = document.createElement('div');
+    card.className = 'project-card live-site-card';
+    
+    const langDotColor = LANG_COLORS[repo.language] || '#64748b';
+    const pageUrl = `https://${githubUsername.toLowerCase()}.github.io/${repo.name}/`;
+    
+    card.innerHTML = `
+      <div class="live-card-glow"></div>
+      <div>
+        <div class="project-meta">
+          <div class="project-folder-icon" style="color: var(--accent-cyan);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          </div>
+          <span class="live-badge">
+            <span class="live-badge-dot"></span>
+            LIVE DEMO
+          </span>
+        </div>
+        
+        <h3>${repo.name}</h3>
+        <p>${repo.description || 'No description provided for this repository.'}</p>
+      </div>
+
+      <div class="project-footer">
+        <div class="project-lang">
+          ${repo.language ? `
+            <span class="lang-color-dot" style="background-color: ${langDotColor};"></span>
+            <span>${repo.language}</span>
+          ` : ''}
+        </div>
+        <div class="project-links" style="display: flex; align-items: center;">
+          <a href="${pageUrl}" target="_blank" class="btn btn-primary btn-sm" style="padding: 0.45rem 1.1rem; font-size: 0.8rem; box-shadow: 0 4px 10px rgba(6, 182, 212, 0.25); background: linear-gradient(135deg, var(--accent-cyan), var(--accent-primary)); border: none; border-radius: 8px; color: var(--text-primary); text-decoration: none; font-weight: 600;">
+            Visit Site
+          </a>
+          <a href="${repo.html_url}" target="_blank" class="project-link-btn" title="View Source" style="margin-left: 0.75rem; display: inline-flex; align-items: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          </a>
+        </div>
+      </div>
+    `;
+    liveSitesGrid.appendChild(card);
+  });
 }
 
 // Setup searching input handler
@@ -267,3 +334,62 @@ function renderErrorState() {
     </div>
   `;
 }
+
+// Typewriter Effect for Hero Subsection
+function runTypewriter() {
+  const words = ["Software Engineer", "Open Source Developer", "Security & Automation Builder"];
+  let wordIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  const target = document.getElementById("typewriter");
+  if (!target) return;
+  
+  function type() {
+    const currentWord = words[wordIndex];
+    if (isDeleting) {
+      target.textContent = currentWord.substring(0, charIndex - 1);
+      charIndex--;
+    } else {
+      target.textContent = currentWord.substring(0, charIndex + 1);
+      charIndex++;
+    }
+    
+    let typeSpeed = isDeleting ? 35 : 85;
+    
+    if (!isDeleting && charIndex === currentWord.length) {
+      typeSpeed = 1800; // pause at the end of typing
+      isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      wordIndex = (wordIndex + 1) % words.length;
+      typeSpeed = 400; // pause before typing next word
+    }
+    
+    setTimeout(type, typeSpeed);
+  }
+  
+  type();
+}
+
+// Scroll reveal animations observer
+function setupScrollReveal() {
+  const revealElements = document.querySelectorAll('.hero-card, .stat-card, .section-header, .project-card, .contact-card');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target); // Trigger only once
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: "0px 0px -40px 0px"
+  });
+  
+  revealElements.forEach(el => {
+    el.classList.add('reveal-item');
+    observer.observe(el);
+  });
+}
+
