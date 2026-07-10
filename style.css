@@ -530,21 +530,147 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem 0;
+  padding: 1.5rem;
 }
 .contrib-img {
-  max-width: 96%;
+  width: 100%;
+  max-width: 100%;
   height: auto;
   display: block;
   border-radius: 8px;
   transition: opacity 0.5s;
 }
 
-/* Beautifully dark-mode-ify the rshah chart using CSS filters */
+/* Scale up the rshah SVG to fill the container nicely and invert colors for dark theme */
 #contrib-graph {
   filter: invert(0.9) hue-rotate(190deg) brightness(0.95) contrast(1.2);
   mix-blend-mode: screen;
-  padding: 0.5rem 1rem;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Native Dashboards CSS */
+.contrib-native-wrapper {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.native-loader {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-3);
+  text-align: center;
+}
+
+/* Live Activity Stream Terminal UI */
+.commit-feed {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.commit-item {
+  display: flex;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed rgba(255,255,255,0.04);
+}
+.commit-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.commit-time {
+  color: var(--accent-cyan);
+  flex-shrink: 0;
+  font-size: 0.75rem;
+}
+.commit-repo {
+  color: var(--accent-purple);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.commit-msg {
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+}
+
+/* Native Stats Overview Grid */
+.native-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.native-stat-box {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 12px;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  transition: var(--transition);
+}
+.native-stat-box:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+}
+.native-stat-num {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text-1);
+}
+.native-stat-lbl {
+  font-size: 0.7rem;
+  color: var(--text-3);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Native Languages Skill Analysis Progress Bars */
+.native-lang-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.native-lang-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.native-lang-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.native-lang-name {
+  color: var(--text-2);
+}
+.native-lang-pct {
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+}
+.native-lang-bar-bg {
+  height: 6px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.native-lang-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Trophies */

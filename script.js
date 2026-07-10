@@ -39,6 +39,7 @@ let filteredRepos = [];
 let activeFilter  = 'All';
 let activeSort    = 'updated';
 let searchQuery   = '';
+let userProfile   = null;
 
 // ── DOM refs (lazy, after DOMContentLoaded) ─────────────────────────────────
 let $;
@@ -214,46 +215,11 @@ function setFooterYear() {
 // ═══════════════════════════════════════════════════════════════════════════
 function injectContribImages() {
   const u = GITHUB_USERNAME;
-  const bg = '0c0e1a'; // Exact match for --bg-1 card color
-  const text = '94a3b8'; // Slate text color
-  const title = 'a855f7'; // Purple title
-  const icon = '06b6d4'; // Cyan icons
 
   // Contribution graph via ghchart.rshah.org
   const contribGraph = document.getElementById('contrib-graph');
   if (contribGraph) {
     contribGraph.src = `https://ghchart.rshah.org/6366f1/${u}`;
-    contribGraph.onerror = function() {
-      this.src = `https://github-readme-stats.vercel.app/api?username=${u}&show_icons=true&hide_border=true&bg_color=${bg}&count_private=true&icon_color=${icon}&title_color=${title}&text_color=${text}`;
-    };
-  }
-
-  // Streak stats (custom colors to blend perfectly)
-  const streakImg = document.getElementById('streak-img');
-  if (streakImg) {
-    streakImg.src = `https://streak-stats.demolab.com/?user=${u}&hide_border=true&background=${bg}&ring=${icon}&fire=${title}&currStreakLabel=${text}&sideLabels=${text}&dates=${text}&currStreakNum=f1f5f9&sideNums=f1f5f9`;
-    streakImg.onerror = function() {
-      this.style.display = 'none';
-      this.closest('.contrib-card').style.display = 'none';
-    };
-  }
-
-  // GitHub Stats card (custom colors)
-  const statsImg = document.getElementById('stats-img');
-  if (statsImg) {
-    statsImg.src = `https://github-readme-stats.vercel.app/api?username=${u}&show_icons=true&hide_border=true&bg_color=${bg}&count_private=true&include_all_commits=true&icon_color=${icon}&title_color=${title}&text_color=${text}`;
-    statsImg.onerror = function() {
-      this.closest('.contrib-card').style.display = 'none';
-    };
-  }
-
-  // Top Languages (custom colors)
-  const langsImg = document.getElementById('langs-img');
-  if (langsImg) {
-    langsImg.src = `https://github-readme-stats.vercel.app/api/top-langs/?username=${u}&layout=compact&hide_border=true&bg_color=${bg}&title_color=${title}&text_color=${text}&icon_color=${icon}&langs_count=8`;
-    langsImg.onerror = function() {
-      this.closest('.contrib-card').style.display = 'none';
-    };
   }
 
   // Trophies
@@ -269,6 +235,121 @@ function injectContribImages() {
   const year = new Date().getFullYear();
   const yearEl = document.getElementById('contrib-year');
   if (yearEl) yearEl.textContent = `${year - 1}–${year}`;
+
+  // Fetch live stream activity
+  fetchAndRenderActivityStream();
+}
+
+// Live Git Event stream terminal feed
+async function fetchAndRenderActivityStream() {
+  const streamEl = document.getElementById('live-activity-stream');
+  if (!streamEl) return;
+
+  try {
+    const resp = await fetch(`${GH_API}/users/${GITHUB_USERNAME}/events/public`);
+    if (!resp.ok) throw new Error();
+    const events = await resp.json();
+    const pushEvents = events.filter(e => e.type === 'PushEvent').slice(0, 5);
+
+    if (pushEvents.length === 0) {
+      streamEl.innerHTML = `<div class="native-loader">No recent commits found.</div>`;
+      return;
+    }
+
+    let html = `<div class="commit-feed">`;
+    pushEvents.forEach(ev => {
+      const repoName = ev.repo.name.replace(`${GITHUB_USERNAME}/`, '');
+      const commits = ev.payload.commits || [];
+      const relTime = timeAgo(ev.created_at);
+
+      commits.forEach(c => {
+        html += `
+          <div class="commit-item">
+            <span class="commit-time">${relTime}</span>
+            <span class="commit-repo">[${repoName}]</span>
+            <span class="commit-msg" title="${c.message}">${c.message}</span>
+          </div>
+        `;
+      });
+    });
+    html += `</div>`;
+    streamEl.innerHTML = html;
+  } catch (err) {
+    streamEl.innerHTML = `<div class="native-loader" style="color:var(--text-3)">Activity stream temporarily offline</div>`;
+  }
+}
+
+// Native Stats Overview Widget
+function renderNativeStatsOverview(user) {
+  const container = document.getElementById('stats-overview');
+  if (!container) return;
+
+  // Let's count totals from repos (stars, forks)
+  let totalStars = 0, totalForks = 0, watchers = 0;
+  allRepos.forEach(r => {
+    totalStars += r.stargazers_count || 0;
+    totalForks += r.forks_count || 0;
+    watchers += r.watchers_count || 0;
+  });
+
+  container.innerHTML = `
+    <div class="native-stats-grid">
+      <div class="native-stat-box">
+        <span class="native-stat-num">${allRepos.length}</span>
+        <span class="native-stat-lbl">Public Repos</span>
+      </div>
+      <div class="native-stat-box">
+        <span class="native-stat-num">${totalStars}</span>
+        <span class="native-stat-lbl">Stars Received</span>
+      </div>
+      <div class="native-stat-box">
+        <span class="native-stat-num">${totalForks}</span>
+        <span class="native-stat-lbl">Total Forks</span>
+      </div>
+      <div class="native-stat-box">
+        <span class="native-stat-num">${user.followers || 0}</span>
+        <span class="native-stat-lbl">Followers</span>
+      </div>
+    </div>
+  `;
+}
+
+// Native Languages analysis widget
+function renderNativeLanguageAnalysis() {
+  const container = document.getElementById('language-analysis');
+  if (!container) return;
+
+  const langCounts = {};
+  allRepos.forEach(r => {
+    if (r.language) langCounts[r.language] = (langCounts[r.language] || 0) + 1;
+  });
+
+  const total = Object.values(langCounts).reduce((a, b) => a + b, 0);
+  if (total === 0) {
+    container.innerHTML = `<div class="native-loader">No language data found</div>`;
+    return;
+  }
+
+  const sorted = Object.entries(langCounts).sort((a, b) => b[1] - a[1]).slice(0, 4);
+
+  let html = `<div class="native-lang-list">`;
+  sorted.forEach(([lang, count]) => {
+    const pct = ((count / total) * 100).toFixed(0);
+    const color = LANG_COLORS[lang] || '#64748b';
+    html += `
+      <div class="native-lang-row">
+        <div class="native-lang-info">
+          <span class="native-lang-name">${lang}</span>
+          <span class="native-lang-pct">${pct}%</span>
+        </div>
+        <div class="native-lang-bar-bg">
+          <div class="native-lang-bar-fill" style="width: ${pct}%; background: ${color}"></div>
+        </div>
+      </div>
+    `;
+  });
+  html += `</div>`;
+  container.innerHTML = html;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -278,6 +359,7 @@ async function fetchUser() {
   const resp = await fetch(GH_USER);
   if (!resp.ok) throw new Error(`User API ${resp.status}`);
   const user = await resp.json();
+  userProfile = user;
   renderUserProfile(user);
 }
 
@@ -335,6 +417,9 @@ function renderUserProfile(user) {
 
   // Followers count in stats dashboard (keep in the stats cards)
   animateCount('stat-followers', 0, user.followers, 1000);
+
+  // Render native stats overview
+  renderNativeStatsOverview(user);
 }
 
 function showMeta(wrapperId, spanId, value) {
@@ -368,6 +453,12 @@ async function fetchRepos() {
   renderLiveSites();
   renderFilters();
   renderRepos();
+
+  // Populate native components in Contributions grid
+  renderNativeLanguageAnalysis();
+  if (userProfile) {
+    renderNativeStatsOverview(userProfile);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
