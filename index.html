@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=7">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 </head>
 <body>
@@ -25,10 +25,9 @@
             </a>
             <div class="nav-links" id="nav-links">
                 <a href="#hero" class="nav-link active" data-section="hero">Home</a>
-                <a href="#about" class="nav-link" data-section="about">About</a>
+                <a href="#activity" class="nav-link" data-section="activity">Activity</a>
                 <a href="#skills" class="nav-link" data-section="skills">Skills</a>
                 <a href="#projects" class="nav-link" data-section="projects">Projects</a>
-                <a href="#activity" class="nav-link" data-section="activity">Activity</a>
                 <a href="#contact" class="nav-link" data-section="contact">Contact</a>
             </div>
             <div class="nav-actions">
@@ -105,31 +104,25 @@
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="section about-section">
+    <!-- Activity Section -->
+    <section id="activity" class="section activity-section">
         <div class="section-container">
-            <div class="section-label animate-on-scroll">About Me</div>
-            <h2 class="section-heading animate-on-scroll">Passionate Developer &<br>AI Enthusiast</h2>
-            <div class="about-grid">
-                <div class="about-card glass-card animate-on-scroll">
-                    <div class="about-card-icon">🎓</div>
-                    <h3>Student</h3>
-                    <p id="about-bio">AI & Full-Stack Explorer shipping Python & FastAPI projects daily. Building at the speed of thought.</p>
+            <div class="section-label animate-on-scroll">Activity</div>
+            <h2 class="section-heading animate-on-scroll">Contributions &amp; Stats</h2>
+            <div class="activity-viewer-container">
+                <div class="heatmap-card glass-card animate-on-scroll">
+                    <h3>GitHub Contribution Calendar</h3>
+                    <div class="heatmap-wrapper">
+                        <img src="https://ghchart.rshah.org/6366f1/dev3Masud" alt="dev3Masud GitHub contributions chart" />
+                    </div>
                 </div>
-                <div class="about-card glass-card animate-on-scroll">
-                    <div class="about-card-icon">📍</div>
-                    <h3>Location</h3>
-                    <p id="about-location">Comilla, Chittagong, Bangladesh</p>
-                </div>
-                <div class="about-card glass-card animate-on-scroll">
-                    <div class="about-card-icon">📅</div>
-                    <h3>Member Since</h3>
-                    <p id="about-joined">GitHub member since 2025</p>
-                </div>
-                <div class="about-card glass-card animate-on-scroll">
-                    <div class="about-card-icon">🌐</div>
-                    <h3>Community</h3>
-                    <p><span id="about-followers">0</span> followers · <span id="about-following">0</span> following</p>
+                <div class="stats-cards-grid">
+                    <div class="stats-widget-card glass-card animate-on-scroll">
+                        <img src="https://github-readme-streak-stats.herokuapp.com/?user=dev3Masud&theme=tokyonight&background=0f142300&hide_border=true&ring=818cf8&fire=a78bfa&stroke=e0e7ff&currStreakName=818cf8&currStreakNum=f1f5f9" alt="GitHub Streak Stats" />
+                    </div>
+                    <div class="stats-widget-card glass-card animate-on-scroll">
+                        <img src="https://github-readme-stats.vercel.app/api?username=dev3Masud&show_icons=true&theme=tokyonight&bg_color=0f142300&hide_border=true&title_color=818cf8&icon_color=22d3ee&text_color=cbd5e1" alt="GitHub Stats" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -192,20 +185,6 @@
         </div>
     </section>
 
-    <!-- Activity Section -->
-    <section id="activity" class="section activity-section">
-        <div class="section-container">
-            <div class="section-label animate-on-scroll">Activity</div>
-            <h2 class="section-heading animate-on-scroll">Recent GitHub Activity</h2>
-            <div class="activity-feed glass-card animate-on-scroll" id="activity-feed">
-                <div class="skeleton-lines">
-                    <div class="skeleton-line"></div>
-                    <div class="skeleton-line short"></div>
-                    <div class="skeleton-line"></div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Contact Section -->
     <section id="contact" class="section contact-section">
@@ -251,6 +230,6 @@
         </div>
     </footer>
 
-    <script src="app.js?v=6"></script>
+    <script src="app.js?v=7"></script>
 </body>
 </html>

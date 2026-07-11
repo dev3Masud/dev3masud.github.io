@@ -9,7 +9,7 @@
     const CFG = {
         username: 'dev3Masud',
         hiddenRepos: ['dev3masud', 'dev3masud.github.io'],
-        cacheKey: 'gh_portfolio_v6',
+        cacheKey: 'gh_portfolio_v7',
         cacheTTL: 5 * 60 * 1000,
         api: 'https://api.github.com',
         pagesBase: 'https://dev3masud.github.io',
@@ -151,7 +151,7 @@
         });
 
         // Active section tracking
-        const sections = ['hero', 'about', 'skills', 'projects', 'activity', 'contact'];
+        const sections = ['hero', 'activity', 'skills', 'projects', 'contact'];
         const sectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -212,16 +212,15 @@
     // ════════════════════════════════
     async function loadData() {
         const cached = getCache();
-        if (cached) renderAll(cached.profile, cached.repos, cached.events);
+        if (cached) renderAll(cached.profile, cached.repos);
 
         try {
-            const [profile, repos, events] = await Promise.all([
+            const [profile, repos] = await Promise.all([
                 api(`/users/${CFG.username}`),
                 fetchAllRepos(),
-                api(`/users/${CFG.username}/events?per_page=30`),
             ]);
-            setCache({ profile, repos, events });
-            renderAll(profile, repos, events);
+            setCache({ profile, repos });
+            renderAll(profile, repos);
         } catch (e) {
             console.error('API Error:', e);
             if (!cached) showError('GitHub API rate limit reached. Try again shortly.');
@@ -261,15 +260,13 @@
     // ════════════════════════════════
     //  Render All
     // ════════════════════════════════
-    function renderAll(profile, repos, events) {
+    function renderAll(profile, repos) {
         allRepos = repos.filter(r => !r.private);
         const visible = allRepos.filter(r => !isHidden(r.name) && !r.fork);
 
         renderHero(profile, visible);
-        renderAbout(profile);
         renderSkills(visible);
         renderProjects();
-        renderActivity(events);
         renderFooter();
 
         // Set GitHub links
@@ -296,15 +293,6 @@
         animateNumber('#hero-pages', pagesCount);
         animateNumber('#hero-stars', totalStars);
         animateNumber('#hero-langs', langs);
-    }
-
-    // ── About ──
-    function renderAbout(p) {
-        if (p.bio) setText('#about-bio', p.bio);
-        if (p.location) setText('#about-location', p.location);
-        setText('#about-joined', `GitHub member since ${new Date(p.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`);
-        setText('#about-followers', p.followers);
-        setText('#about-following', p.following);
     }
 
     // ── Skills ──
@@ -455,62 +443,6 @@
         `;
     }
 
-    // ── Activity ──
-    function renderActivity(events) {
-        const feed = $('#activity-feed');
-        if (!feed || !events) return;
-
-        const types = ['PushEvent','CreateEvent','WatchEvent','ForkEvent','IssuesEvent',
-                       'PullRequestEvent','DeleteEvent','ReleaseEvent','IssueCommentEvent',
-                       'PullRequestReviewEvent'];
-
-        const items = events.filter(e => types.includes(e.type)).slice(0, 8);
-
-        if (!items.length) {
-            feed.innerHTML = '<p style="color:var(--text-4);text-align:center;padding:2rem;">No recent activity found.</p>';
-            return;
-        }
-
-        feed.innerHTML = items.map((e, i) => {
-            const { emoji, cls, text } = fmtEvent(e);
-            return `
-                <div class="activity-item" style="animation-delay:${i * 70}ms">
-                    <div class="activity-dot ${cls}">${emoji}</div>
-                    <div class="activity-body">
-                        <div class="activity-title">${text}</div>
-                        <div class="activity-time">${timeAgo(e.created_at)}</div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    function fmtEvent(e) {
-        const repo = e.repo?.name?.split('/')[1] || '';
-        const url = `https://github.com/${e.repo?.name}`;
-        const link = `<a href="${url}" target="_blank">${repo}</a>`;
-
-        switch (e.type) {
-            case 'PushEvent': {
-                const n = e.payload?.commits?.length || 0;
-                return { emoji: '⬆️', cls: 'push', text: `Pushed ${n} commit${n !== 1 ? 's' : ''} to ${link}` };
-            }
-            case 'CreateEvent': {
-                const t = e.payload?.ref_type || 'repository';
-                const ref = e.payload?.ref;
-                return { emoji: '✨', cls: 'create', text: ref ? `Created ${t} <strong>${esc(ref)}</strong> in ${link}` : `Created ${t} ${link}` };
-            }
-            case 'WatchEvent': return { emoji: '⭐', cls: 'star', text: `Starred ${link}` };
-            case 'ForkEvent': return { emoji: '🍴', cls: 'fork', text: `Forked ${link}` };
-            case 'IssuesEvent': return { emoji: '🔵', cls: 'issue', text: `${cap(e.payload?.action || 'updated')} issue in ${link}` };
-            case 'PullRequestEvent': return { emoji: '🔀', cls: 'pr', text: `${cap(e.payload?.action || 'updated')} PR in ${link}` };
-            case 'DeleteEvent': return { emoji: '🗑️', cls: 'delete', text: `Deleted ${e.payload?.ref_type || 'branch'} in ${link}` };
-            case 'ReleaseEvent': return { emoji: '🚀', cls: 'release', text: `Published release in ${link}` };
-            case 'IssueCommentEvent': return { emoji: '💬', cls: 'issue', text: `Commented on issue in ${link}` };
-            case 'PullRequestReviewEvent': return { emoji: '👁️', cls: 'pr', text: `Reviewed PR in ${link}` };
-            default: return { emoji: '📋', cls: 'default', text: `Activity in ${link}` };
-        }
-    }
 
     // ── Footer ──
     function renderFooter() {

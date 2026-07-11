@@ -566,36 +566,63 @@ img { display: block; max-width: 100%; }
 }
 
 /* ============================================
-   About
+   Activity Viewer
    ============================================ */
-.about-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.25rem;
+.activity-viewer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.about-card {
+.heatmap-card {
     padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 }
 
-.about-card-icon {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
-
-.about-card h3 {
+.heatmap-card h3 {
     font-family: var(--display);
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
     color: var(--text-1);
+    letter-spacing: 0.02em;
 }
 
-.about-card p {
-    color: var(--text-3);
-    font-size: 0.88rem;
-    line-height: 1.6;
+.heatmap-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 0;
+}
+
+.heatmap-wrapper img {
+    max-width: 100%;
+    height: auto;
+    min-width: 720px;
+}
+
+.stats-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.stats-widget-card {
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    min-height: 200px;
+}
+
+.stats-widget-card img {
+    max-width: 100%;
+    height: auto;
 }
 
 /* ============================================
@@ -1206,7 +1233,7 @@ img { display: block; max-width: 100%; }
     .hero-avatar { width: 160px; height: 160px; }
     .avatar-glow { width: 190px; height: 190px; }
     .avatar-orbit { width: 240px; height: 240px; }
-    .about-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-cards-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 768px) {
@@ -1242,7 +1269,6 @@ img { display: block; max-width: 100%; }
     .projects-grid { grid-template-columns: 1fr; }
     .skeleton-grid { grid-template-columns: 1fr; }
     .contact-cards { grid-template-columns: 1fr; }
-    .about-grid { grid-template-columns: 1fr; }
 
     .projects-toolbar {
         flex-direction: column;
