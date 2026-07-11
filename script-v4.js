@@ -198,9 +198,11 @@ function applyVisibilityFilters() {
 // DASHBOARD DATA LOADER & RENDER COORDINATOR
 // ═══════════════════════════════════════════════════════════════════════════
 async function loadData(force = false) {
+  console.log('GitHub Dashboard: loadData(force=' + force + ') initiated');
   if (!force) {
     const cached = loadCache();
     if (cached) {
+      console.log('GitHub Dashboard: Cache hit found. Render from Cache.', cached);
       userProfile = cached.user;
       rawRepos = cached.repos;
       applyVisibilityFilters();
@@ -213,6 +215,7 @@ async function loadData(force = false) {
     }
   }
 
+  console.log('GitHub Dashboard: Cache miss or force load. Fetching from GitHub API...');
   const refreshBtn = $('refreshBtn');
   const refreshLabel = $('refreshLabel');
   if (refreshBtn) {
@@ -226,6 +229,7 @@ async function loadData(force = false) {
       fetch(GH_USER).then(r => { if (!r.ok) throw new Error(); return r.json(); }),
       fetchAllRepos()
     ]);
+    console.log('GitHub Dashboard: API fetch successful.', { user, reposCount: repos.length });
     userProfile = user;
     rawRepos = repos;
     applyVisibilityFilters();
@@ -238,7 +242,7 @@ async function loadData(force = false) {
     const lastUpdatedEl = $('lastUpdated');
     if (lastUpdatedEl) lastUpdatedEl.textContent = updatedAtStr;
   } catch (err) {
-    console.error('Error loading GitHub data:', err);
+    console.error('GitHub Dashboard: Error loading GitHub data:', err);
     const reposGrid = $('repos');
     if (reposGrid && rawRepos.length === 0) {
       reposGrid.innerHTML = `
@@ -256,12 +260,17 @@ async function loadData(force = false) {
 }
 
 function renderAll() {
+  console.log('GitHub Dashboard: renderAll() triggered.', { hasUserProfile: !!userProfile, reposCount: rawRepos.length, visibleReposCount: allRepos.length });
   if (userProfile) {
+    console.log('GitHub Dashboard: Rendering User Profile Card');
     renderUserProfile(userProfile);
   }
   if (rawRepos.length > 0) {
+    console.log('GitHub Dashboard: Rendering Stats Grid and Repos Grid');
     computeAndRenderStats();
     renderRepos();
+  } else {
+    console.warn('GitHub Dashboard: No repositories to render.');
   }
 }
 
