@@ -1171,13 +1171,13 @@ img { display: block; max-width: 100%; }
 /* ============================================
    Scroll Animations
    ============================================ */
-.animate-on-scroll {
+.js-scroll .animate-on-scroll {
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
 }
 
-.animate-on-scroll.visible {
+.js-scroll .animate-on-scroll.visible {
     opacity: 1;
     transform: translateY(0);
 }

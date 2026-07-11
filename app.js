@@ -36,6 +36,7 @@
 
     // ── Init ──
     document.addEventListener('DOMContentLoaded', () => {
+        document.body.classList.add('js-scroll');
         initParticles();
         initScrollAnimations();
         initNav();
