@@ -34,15 +34,41 @@ const LANG_COLORS = {
 };
 
 // ── State ───────────────────────────────────────────────────────────────────
-let allRepos      = [];
+const CACHE_KEY = 'gh_dash_cache_v2';
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache TTL
+
+let rawRepos      = []; // Raw repository array from GitHub API
+let allRepos      = []; // Repository array filtered for visibility/forks
 let filteredRepos = [];
 let activeFilter  = 'All';
 let activeSort    = 'updated';
 let searchQuery   = '';
 let userProfile   = null;
+let showHidden    = false;
+let pagesOnly     = false;
 
 // ── DOM refs (lazy, after DOMContentLoaded) ─────────────────────────────────
 let $;
+
+// ── Cache Helpers ───────────────────────────────────────────────────────────
+function loadCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const cached = JSON.parse(raw);
+    if (Date.now() - cached.ts > CACHE_TTL) return null;
+    return cached.data;
+  } catch { return null; }
+}
+
+function saveCache(data) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({
+      ts: Date.now(),
+      data
+    }));
+  } catch {}
+}
 
 // ── Init ────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -56,14 +82,36 @@ document.addEventListener('DOMContentLoaded', () => {
   setFooterYear();
   injectContribImages();
 
-  // Fetch GitHub data in parallel
-  Promise.all([
-    fetchUser(),
-    fetchRepos(),
-  ]).catch(err => {
-    console.error('Portfolio data load error:', err);
+  // Bind Dashboard Buttons
+  const refreshBtn = $('refreshBtn');
+  const pagesOnlyBtn = $('pagesOnlyBtn');
+  const showHiddenBtn = $('showHiddenBtn');
+
+  refreshBtn && refreshBtn.addEventListener('click', () => {
+    loadData(true);
   });
+
+  pagesOnlyBtn && pagesOnlyBtn.addEventListener('click', () => {
+    pagesOnly = !pagesOnly;
+    pagesOnlyBtn.classList.toggle('active', pagesOnly);
+    renderRepos();
+  });
+
+  showHiddenBtn && showHiddenBtn.addEventListener('click', () => {
+    showHidden = !showHidden;
+    showHiddenBtn.classList.toggle('active', showHidden);
+    const labelSpan = showHiddenBtn.querySelector('span:last-child');
+    if (labelSpan) {
+      labelSpan.textContent = showHidden ? 'Showing all' : 'Show all';
+    }
+    applyVisibilityFilters();
+    renderAll();
+  });
+
+  // Load Dashboard Data (from Cache or API)
+  loadData();
 });
+
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PARTICLE CANVAS
@@ -353,15 +401,36 @@ function renderNativeLanguageAnalysis() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// FETCH USER PROFILE
+// FETCH ALL REPOSITORIES (PAGINATED RECURSION)
 // ═══════════════════════════════════════════════════════════════════════════
-async function fetchUser() {
-  const resp = await fetch(GH_USER);
-  if (!resp.ok) throw new Error(`User API ${resp.status}`);
-  const user = await resp.json();
-  userProfile = user;
-  renderUserProfile(user);
+async function fetchAllRepos() {
+  let all = [], page = 1;
+  while (true) {
+    const res = await fetch(`${GH_API}/users/${GITHUB_USERNAME}/repos?per_page=100&page=${page}&type=owner&sort=updated`);
+    if (!res.ok) throw new Error(`GitHub API error: ${res.status} ${res.statusText}`);
+    const batch = await res.json();
+    if (!Array.isArray(batch) || batch.length === 0) break;
+    all = all.concat(batch);
+    if (batch.length < 100) break;
+    page++;
+  }
+  return all;
 }
+
+function applyVisibilityFilters() {
+  const myLogin = GITHUB_USERNAME.toLowerCase();
+  const portfolioName = `${myLogin}.github.io`;
+
+  allRepos = rawRepos.filter(r => {
+    if (!showHidden) {
+      if (r.fork) return false;
+      if (r.name.toLowerCase() === myLogin) return false;
+      if (r.name.toLowerCase() === portfolioName) return false;
+    }
+    return true;
+  });
+}
+
 
 function renderUserProfile(user) {
   // Avatar
@@ -428,34 +497,80 @@ function showMeta(wrapperId, spanId, value) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// FETCH REPOSITORIES
+// DASHBOARD DATA LOADER & RENDER COORDINATOR
 // ═══════════════════════════════════════════════════════════════════════════
-async function fetchRepos() {
-  const resp = await fetch(GH_REPOS);
-  if (!resp.ok) throw new Error(`Repos API ${resp.status}`);
-  const data = await resp.json();
+async function loadData(force = false) {
+  if (!force) {
+    const cached = loadCache();
+    if (cached) {
+      userProfile = cached.user;
+      rawRepos = cached.repos;
+      applyVisibilityFilters();
+      renderAll();
+      const lastUpdatedEl = $('lastUpdated');
+      if (lastUpdatedEl && cached.updatedAt) {
+        lastUpdatedEl.textContent = cached.updatedAt;
+      }
+      return;
+    }
+  }
 
-  const myLogin   = GITHUB_USERNAME.toLowerCase();
-  const portfolioName = `${myLogin}.github.io`;
+  const refreshBtn = $('refreshBtn');
+  const refreshLabel = $('refreshLabel');
+  if (refreshBtn) {
+    refreshBtn.classList.add('refreshing');
+    refreshBtn.disabled = true;
+  }
+  if (refreshLabel) refreshLabel.textContent = 'Refreshing…';
 
-  // Exclude forks, own profile repo, and the portfolio repo
-  allRepos = data.filter(r =>
-    !r.fork &&
-    r.name.toLowerCase() !== myLogin &&
-    r.name.toLowerCase() !== portfolioName
-  );
+  try {
+    const [user, repos] = await Promise.all([
+      fetch(GH_USER).then(r => { if (!r.ok) throw new Error(); return r.json(); }),
+      fetchAllRepos()
+    ]);
+    userProfile = user;
+    rawRepos = repos;
+    applyVisibilityFilters();
+    
+    const updatedAtStr = new Date().toLocaleTimeString();
+    saveCache({ user, repos, updatedAt: updatedAtStr });
+    
+    renderAll();
+    
+    const lastUpdatedEl = $('lastUpdated');
+    if (lastUpdatedEl) lastUpdatedEl.textContent = updatedAtStr;
+  } catch (err) {
+    console.error('Error loading GitHub data:', err);
+    const reposGrid = $('repos-grid');
+    if (reposGrid && rawRepos.length === 0) {
+      reposGrid.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--text-2)">
+          <p style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;color:var(--accent-pink)">Error loading GitHub data</p>
+          <p style="font-size:0.88rem;color:var(--text-3)">Rate limit may have been hit or network is offline.</p>
+        </div>`;
+    }
+  } finally {
+    if (refreshBtn) {
+      refreshBtn.classList.remove('refreshing');
+      refreshBtn.disabled = false;
+    }
+    if (refreshLabel) refreshLabel.textContent = 'Refresh';
+  }
+}
 
-  computeAndRenderStats(data); // pass full data (including forks) for total calc
-  renderLanguageBreakdown();
-  renderTopRepos();
-  renderLiveSites();
-  renderFilters();
-  renderRepos();
-
-  // Populate native components in Contributions grid
-  renderNativeLanguageAnalysis();
+function renderAll() {
   if (userProfile) {
+    renderUserProfile(userProfile);
     renderNativeStatsOverview(userProfile);
+  }
+  if (rawRepos.length > 0) {
+    computeAndRenderStats();
+    renderLanguageBreakdown();
+    renderTopRepos();
+    renderLiveSites();
+    renderFilters();
+    renderRepos();
+    renderNativeLanguageAnalysis();
   }
 }
 
@@ -687,6 +802,7 @@ function renderRepos() {
 
   // Filter
   let filtered = allRepos.filter(r => {
+    if (pagesOnly && !r.has_pages) return false;
     if (activeFilter === '🌐 Live Sites') return r.has_pages;
     if (activeFilter !== 'All')           return r.language === activeFilter;
     return true;
