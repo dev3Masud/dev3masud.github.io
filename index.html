@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="style.css?v=8">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 </head>
 <body>
@@ -120,8 +120,12 @@
                     <div class="stats-widget-card glass-card animate-on-scroll">
                         <img src="https://github-readme-streak-stats.herokuapp.com/?user=dev3Masud&theme=tokyonight&background=0f142300&hide_border=true&ring=818cf8&fire=a78bfa&stroke=e0e7ff&currStreakName=818cf8&currStreakNum=f1f5f9" alt="GitHub Streak Stats" />
                     </div>
-                    <div class="stats-widget-card glass-card animate-on-scroll">
-                        <img src="https://github-readme-stats.vercel.app/api?username=dev3Masud&show_icons=true&theme=tokyonight&bg_color=0f142300&hide_border=true&title_color=818cf8&icon_color=22d3ee&text_color=cbd5e1" alt="GitHub Stats" />
+                    <div class="stats-widget-card glass-card animate-on-scroll" id="custom-stats-card">
+                        <div class="skeleton-lines" style="width: 100%;">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line short"></div>
+                            <div class="skeleton-line"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -185,7 +189,6 @@
         </div>
     </section>
 
-
     <!-- Contact Section -->
     <section id="contact" class="section contact-section">
         <div class="section-container">
@@ -230,6 +233,6 @@
         </div>
     </footer>
 
-    <script src="app.js?v=7"></script>
+    <script src="app.js?v=8"></script>
 </body>
 </html>

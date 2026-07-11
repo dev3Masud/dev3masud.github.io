@@ -9,7 +9,7 @@
     const CFG = {
         username: 'dev3Masud',
         hiddenRepos: ['dev3masud', 'dev3masud.github.io'],
-        cacheKey: 'gh_portfolio_v7',
+        cacheKey: 'gh_portfolio_v8',
         cacheTTL: 5 * 60 * 1000,
         api: 'https://api.github.com',
         pagesBase: 'https://dev3masud.github.io',
@@ -267,6 +267,7 @@
         renderHero(profile, visible);
         renderSkills(visible);
         renderProjects();
+        renderCustomStats(profile, visible);
         renderFooter();
 
         // Set GitHub links
@@ -447,6 +448,59 @@
     // ── Footer ──
     function renderFooter() {
         setText('#footer-update', `Last synced: ${new Date().toLocaleString()}`);
+    }
+
+    // ── Custom Profile Stats ──
+    function renderCustomStats(p, repos) {
+        const card = $('#custom-stats-card');
+        if (!card) return;
+
+        const totalStars = repos.reduce((s, r) => s + r.stargazers_count, 0);
+        const pagesCount = repos.filter(r => r.has_pages).length;
+
+        card.innerHTML = `
+            <div class="custom-stats-inner">
+                <h3 class="custom-stats-title">GitHub Profile Stats</h3>
+                <div class="custom-stats-grid">
+                    <div class="custom-stat-item">
+                        <div class="custom-stat-icon star">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
+                        <div class="custom-stat-info">
+                            <span class="custom-stat-num">${totalStars}</span>
+                            <span class="custom-stat-label">Stars Earned</span>
+                        </div>
+                    </div>
+                    <div class="custom-stat-item">
+                        <div class="custom-stat-icon repo">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                        </div>
+                        <div class="custom-stat-info">
+                            <span class="custom-stat-num">${repos.length}</span>
+                            <span class="custom-stat-label">Total Repos</span>
+                        </div>
+                    </div>
+                    <div class="custom-stat-item">
+                        <div class="custom-stat-icon followers">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <div class="custom-stat-info">
+                            <span class="custom-stat-num">${p.followers}</span>
+                            <span class="custom-stat-label">Followers</span>
+                        </div>
+                    </div>
+                    <div class="custom-stat-item">
+                        <div class="custom-stat-icon pages">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        </div>
+                        <div class="custom-stat-info">
+                            <span class="custom-stat-num">${pagesCount}</span>
+                            <span class="custom-stat-label">Live Sites</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
     }
 
     // ── Error ──
