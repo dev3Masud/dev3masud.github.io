@@ -9,7 +9,7 @@
     const CFG = {
         username: 'dev3Masud',
         hiddenRepos: ['dev3masud', 'dev3masud.github.io'],
-        cacheKey: 'gh_portfolio_v9',
+        cacheKey: 'gh_portfolio_v10',
         cacheTTL: 5 * 60 * 1000,
         api: 'https://api.github.com',
         pagesBase: 'https://dev3masud.github.io',
