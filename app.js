@@ -9,7 +9,7 @@
     const CFG = {
         username: 'dev3Masud',
         hiddenRepos: ['dev3masud', 'dev3masud.github.io'],
-        cacheKey: 'gh_portfolio_v8',
+        cacheKey: 'gh_portfolio_v9',
         cacheTTL: 5 * 60 * 1000,
         api: 'https://api.github.com',
         pagesBase: 'https://dev3masud.github.io',
@@ -151,7 +151,7 @@
         });
 
         // Active section tracking
-        const sections = ['hero', 'activity', 'skills', 'projects', 'contact'];
+        const sections = ['hero', 'activity', 'projects', 'contact'];
         const sectionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -265,7 +265,6 @@
         const visible = allRepos.filter(r => !isHidden(r.name) && !r.fork);
 
         renderHero(profile, visible);
-        renderSkills(visible);
         renderProjects();
         renderCustomStats(profile, visible);
         renderFooter();
@@ -296,56 +295,6 @@
         animateNumber('#hero-langs', langs);
     }
 
-    // ── Skills ──
-    function renderSkills(repos) {
-        const counts = {};
-        repos.forEach(r => {
-            if (r.language) counts[r.language] = (counts[r.language] || 0) + 1;
-        });
-
-        const total = Object.values(counts).reduce((a, b) => a + b, 0);
-        if (!total) return;
-
-        const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-
-        // Bar
-        const bar = $('#skills-bar');
-        if (bar) {
-            bar.innerHTML = sorted.map(([lang, count]) => {
-                const pct = (count / total * 100);
-                const color = COLORS[lang] || '#6b7280';
-                return `<div class="skills-bar-seg" style="width:${pct}%;background:${color}" title="${lang}: ${pct.toFixed(1)}%"></div>`;
-            }).join('');
-        }
-
-        // Grid
-        const grid = $('#skills-grid');
-        if (grid) {
-            grid.innerHTML = sorted.map(([lang, count]) => {
-                const pct = (count / total * 100).toFixed(1);
-                const color = COLORS[lang] || '#6b7280';
-                return `
-                    <div class="skill-card animate-on-scroll">
-                        <span class="skill-dot" style="background:${color};color:${color}"></span>
-                        <span class="skill-name">${lang}</span>
-                        <span class="skill-pct">${pct}%</span>
-                        <span class="skill-repos">${count} repo${count > 1 ? 's' : ''}</span>
-                    </div>
-                `;
-            }).join('');
-
-            // Re-observe new animated elements
-            const obs = new IntersectionObserver(entries => {
-                entries.forEach(e => {
-                    if (e.isIntersecting) {
-                        e.target.classList.add('visible');
-                        obs.unobserve(e.target);
-                    }
-                });
-            }, { threshold: 0.1 });
-            grid.querySelectorAll('.animate-on-scroll').forEach(el => obs.observe(el));
-        }
-    }
 
     // ── Projects ──
     function renderProjects() {
