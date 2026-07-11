@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=10">
+    <link rel="stylesheet" href="style.css?v=11">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 </head>
 <body>
@@ -150,12 +150,18 @@
                     <button class="chip" data-filter="source" id="filter-source">Source</button>
                     <button class="chip" data-filter="forked" id="filter-forked">Forked</button>
                 </div>
-                <select id="sort-select" class="sort-select">
-                    <option value="updated">Recently Updated</option>
-                    <option value="stars">Most Stars</option>
-                    <option value="name">Name (A-Z)</option>
-                    <option value="created">Recently Created</option>
-                </select>
+                <div class="custom-select" id="sort-custom-select">
+                    <div class="select-trigger">
+                        <span>Most Stars</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="select-options">
+                        <div class="select-option active" data-value="stars">Most Stars</div>
+                        <div class="select-option" data-value="updated">Recently Updated</div>
+                        <div class="select-option" data-value="name">Name (A-Z)</div>
+                        <div class="select-option" data-value="created">Recently Created</div>
+                    </div>
+                </div>
             </div>
             <div class="projects-grid" id="repos-grid">
                 <div class="skeleton-grid">
@@ -218,6 +224,6 @@
         </div>
     </footer>
 
-    <script src="app.js?v=10"></script>
+    <script src="app.js?v=11"></script>
 </body>
 </html>

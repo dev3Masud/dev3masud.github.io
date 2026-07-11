@@ -9,7 +9,7 @@
     const CFG = {
         username: 'dev3Masud',
         hiddenRepos: ['dev3masud', 'dev3masud.github.io'],
-        cacheKey: 'gh_portfolio_v10',
+        cacheKey: 'gh_portfolio_v11',
         cacheTTL: 5 * 60 * 1000,
         api: 'https://api.github.com',
         pagesBase: 'https://dev3masud.github.io',
@@ -29,7 +29,7 @@
 
     // ── State ──
     let allRepos = [];
-    let filter = 'all', sort = 'updated', search = '';
+    let filter = 'all', sort = 'stars', search = '';
 
     const $ = s => document.querySelector(s);
     const $$ = s => document.querySelectorAll(s);
@@ -200,10 +200,38 @@
             });
         });
 
-        // Sort
-        $('#sort-select')?.addEventListener('change', e => {
-            sort = e.target.value;
-            renderProjects();
+        // Sort (Custom Dropdown)
+        const customSelect = $('#sort-custom-select');
+        const trigger = customSelect?.querySelector('.select-trigger');
+        const triggerText = trigger?.querySelector('span');
+        const optionsContainer = customSelect?.querySelector('.select-options');
+        const options = customSelect?.querySelectorAll('.select-option');
+
+        trigger?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            customSelect?.classList.toggle('open');
+        });
+
+        document.addEventListener('click', () => {
+            customSelect?.classList.remove('open');
+        });
+
+        options?.forEach(opt => {
+            opt.addEventListener('click', () => {
+                const val = opt.dataset.value;
+                const txt = opt.textContent;
+
+                // Update active state
+                options.forEach(o => o.classList.remove('active'));
+                opt.classList.add('active');
+
+                // Update trigger text
+                if (triggerText) triggerText.textContent = txt;
+
+                // Update sort state and render
+                sort = val;
+                renderProjects();
+            });
         });
     }
 
