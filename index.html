@@ -3,201 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dev3Masud — GitHub Dashboard</title>
-    <meta name="description" content="GitHub activity dashboard for dev3Masud — Track repositories, contributions, and GitHub Pages deployments.">
+    <title>Abdullah Al Masud — Full-Stack Developer & AI Explorer</title>
+    <meta name="description" content="Portfolio & GitHub Dashboard of Abdullah Al Masud — AI & Full-Stack Explorer shipping Python & FastAPI projects daily.">
+    <meta name="theme-color" content="#0a0e17">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 </head>
 <body>
-    <!-- Animated background -->
-    <div class="bg-grid"></div>
-    <div class="bg-glow bg-glow-1"></div>
-    <div class="bg-glow bg-glow-2"></div>
-    <div class="bg-glow bg-glow-3"></div>
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
 
-    <!-- Header -->
-    <header id="dashboard-header">
-        <div class="header-content">
-            <div class="header-left">
-                <div class="logo-mark">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-                    </svg>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-inner">
+            <a href="#hero" class="nav-logo">
+                <span class="logo-icon">M</span>
+                <span class="logo-text">dev3Masud</span>
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="#hero" class="nav-link active" data-section="hero">Home</a>
+                <a href="#about" class="nav-link" data-section="about">About</a>
+                <a href="#skills" class="nav-link" data-section="skills">Skills</a>
+                <a href="#projects" class="nav-link" data-section="projects">Projects</a>
+                <a href="#activity" class="nav-link" data-section="activity">Activity</a>
+                <a href="#contact" class="nav-link" data-section="contact">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <a href="" id="nav-github-link" class="nav-cta" target="_blank" rel="noopener noreferrer">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <div class="hero-badge animate-on-scroll">
+                <span class="status-dot"></span>
+                Available for collaboration
+            </div>
+            <h1 class="hero-title animate-on-scroll">
+                <span class="hero-greeting">Hi, I'm</span>
+                <span class="hero-name" id="hero-name">Abdullah Al Masud</span>
+            </h1>
+            <p class="hero-tagline animate-on-scroll" id="hero-tagline">
+                AI & Full-Stack Explorer <span class="accent-sep">|</span> Shipping Python & FastAPI projects daily <span class="accent-sep">|</span> ⚡ Building at the speed of thought.
+            </p>
+            <div class="hero-stats animate-on-scroll" id="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-value" id="hero-repos">—</span>
+                    <span class="hero-stat-label">Repositories</span>
                 </div>
-                <div class="header-text">
-                    <h1 id="dashboard-title">GitHub Dashboard</h1>
-                    <p class="header-subtitle" id="header-username">Loading...</p>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value" id="hero-pages">—</span>
+                    <span class="hero-stat-label">Live Sites</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value" id="hero-stars">—</span>
+                    <span class="hero-stat-label">Stars Earned</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value" id="hero-langs">—</span>
+                    <span class="hero-stat-label">Languages</span>
                 </div>
             </div>
-            <div class="header-right">
-                <div class="search-box" id="search-box">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <input type="text" id="repo-search" placeholder="Search repositories..." autocomplete="off">
-                </div>
-                <a href="" id="github-profile-link" class="btn-profile" target="_blank" rel="noopener noreferrer">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                        <polyline points="15 3 21 3 21 9"></polyline>
-                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                    </svg>
-                    View Profile
+            <div class="hero-actions animate-on-scroll">
+                <a href="#projects" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    View Projects
+                </a>
+                <a href="#contact" class="btn btn-outline">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    Get in Touch
                 </a>
             </div>
         </div>
-    </header>
+        <div class="hero-visual">
+            <div class="hero-avatar-container animate-on-scroll">
+                <img src="" alt="Abdullah Al Masud" class="hero-avatar" id="hero-avatar">
+                <div class="avatar-orbit">
+                    <div class="orbit-dot orbit-dot-1">⚡</div>
+                    <div class="orbit-dot orbit-dot-2">🐍</div>
+                    <div class="orbit-dot orbit-dot-3">🚀</div>
+                </div>
+                <div class="avatar-glow"></div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
 
-    <!-- Main Content -->
-    <main id="main-content">
-        <!-- Profile Section -->
-        <section class="profile-section" id="profile-section">
-            <div class="profile-card glass-card">
-                <div class="profile-avatar-wrapper">
-                    <img id="profile-avatar" src="" alt="GitHub Avatar" class="profile-avatar">
-                    <div class="avatar-ring"></div>
+    <!-- About Section -->
+    <section id="about" class="section about-section">
+        <div class="section-container">
+            <div class="section-label animate-on-scroll">About Me</div>
+            <h2 class="section-heading animate-on-scroll">Passionate Developer &<br>AI Enthusiast</h2>
+            <div class="about-grid">
+                <div class="about-card glass-card animate-on-scroll">
+                    <div class="about-card-icon">🎓</div>
+                    <h3>Student</h3>
+                    <p id="about-bio">AI & Full-Stack Explorer shipping Python & FastAPI projects daily. Building at the speed of thought.</p>
                 </div>
-                <div class="profile-info">
-                    <h2 id="profile-name" class="profile-name">Loading...</h2>
-                    <p id="profile-bio" class="profile-bio"></p>
-                    <div class="profile-meta">
-                        <span id="profile-location" class="meta-item hidden">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                            <span></span>
-                        </span>
-                        <span id="profile-company" class="meta-item hidden">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                            <span></span>
-                        </span>
-                        <span id="profile-joined" class="meta-item">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                            <span></span>
-                        </span>
-                    </div>
+                <div class="about-card glass-card animate-on-scroll">
+                    <div class="about-card-icon">📍</div>
+                    <h3>Location</h3>
+                    <p id="about-location">Comilla, Chittagong, Bangladesh</p>
+                </div>
+                <div class="about-card glass-card animate-on-scroll">
+                    <div class="about-card-icon">📅</div>
+                    <h3>Member Since</h3>
+                    <p id="about-joined">GitHub member since 2025</p>
+                </div>
+                <div class="about-card glass-card animate-on-scroll">
+                    <div class="about-card-icon">🌐</div>
+                    <h3>Community</h3>
+                    <p><span id="about-followers">0</span> followers · <span id="about-following">0</span> following</p>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Stats Cards -->
-            <div class="stats-grid">
-                <div class="stat-card glass-card" id="stat-repos">
-                    <div class="stat-icon stat-icon-repos">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                    </div>
-                    <div class="stat-value" id="stat-repos-value">—</div>
-                    <div class="stat-label">Public Repos</div>
-                </div>
-                <div class="stat-card glass-card" id="stat-followers">
-                    <div class="stat-icon stat-icon-followers">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                    </div>
-                    <div class="stat-value" id="stat-followers-value">—</div>
-                    <div class="stat-label">Followers</div>
-                </div>
-                <div class="stat-card glass-card" id="stat-following">
-                    <div class="stat-icon stat-icon-following">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                    </div>
-                    <div class="stat-value" id="stat-following-value">—</div>
-                    <div class="stat-label">Following</div>
-                </div>
-                <div class="stat-card glass-card" id="stat-pages">
-                    <div class="stat-icon stat-icon-pages">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                    </div>
-                    <div class="stat-value" id="stat-pages-value">—</div>
-                    <div class="stat-label">GitHub Pages</div>
-                </div>
+    <!-- Skills / Languages Section -->
+    <section id="skills" class="section skills-section">
+        <div class="section-container">
+            <div class="section-label animate-on-scroll">Tech Stack</div>
+            <h2 class="section-heading animate-on-scroll">Languages & Technologies</h2>
+            <div class="skills-bar-wrap animate-on-scroll">
+                <div class="skills-bar" id="skills-bar"></div>
             </div>
-        </section>
+            <div class="skills-grid" id="skills-grid">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </section>
 
-        <!-- Recent Activity Section -->
-        <section class="activity-section" id="activity-section">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                    Recent Activity
-                </h2>
-            </div>
-            <div class="activity-timeline glass-card" id="activity-timeline">
-                <div class="loading-skeleton">
-                    <div class="skeleton-line"></div>
-                    <div class="skeleton-line short"></div>
-                    <div class="skeleton-line"></div>
-                    <div class="skeleton-line short"></div>
+    <!-- Projects Section -->
+    <section id="projects" class="section projects-section">
+        <div class="section-container">
+            <div class="section-label animate-on-scroll">Projects</div>
+            <h2 class="section-heading animate-on-scroll">Featured Repositories</h2>
+            <div class="projects-toolbar animate-on-scroll">
+                <div class="search-box" id="search-box">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="repo-search" placeholder="Search projects..." autocomplete="off">
                 </div>
-            </div>
-        </section>
-
-        <!-- Language Distribution -->
-        <section class="languages-section" id="languages-section">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
-                    Language Distribution
-                </h2>
-            </div>
-            <div class="languages-chart glass-card" id="languages-chart">
-                <div class="loading-skeleton">
-                    <div class="skeleton-line"></div>
-                    <div class="skeleton-line short"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Repositories Section -->
-        <section class="repos-section" id="repos-section">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                    Repositories
-                </h2>
-                <div class="filter-controls">
-                    <button class="filter-btn active" id="filter-all" data-filter="all">All</button>
-                    <button class="filter-btn" id="filter-pages" data-filter="pages">
+                <div class="filter-group">
+                    <button class="chip active" data-filter="all" id="filter-all">All</button>
+                    <button class="chip" data-filter="pages" id="filter-pages">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                        GitHub Pages
+                        Live Sites
                     </button>
-                    <button class="filter-btn" id="filter-source" data-filter="source">Source</button>
-                    <button class="filter-btn" id="filter-forked" data-filter="forked">Forked</button>
-                    <div class="sort-control">
-                        <select id="sort-select">
-                            <option value="updated">Recently Updated</option>
-                            <option value="stars">Most Stars</option>
-                            <option value="name">Name (A-Z)</option>
-                            <option value="created">Recently Created</option>
-                        </select>
+                    <button class="chip" data-filter="source" id="filter-source">Source</button>
+                    <button class="chip" data-filter="forked" id="filter-forked">Forked</button>
+                </div>
+                <select id="sort-select" class="sort-select">
+                    <option value="updated">Recently Updated</option>
+                    <option value="stars">Most Stars</option>
+                    <option value="name">Name (A-Z)</option>
+                    <option value="created">Recently Created</option>
+                </select>
+            </div>
+            <div class="projects-grid" id="repos-grid">
+                <div class="skeleton-grid">
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                </div>
+            </div>
+            <div class="projects-empty hidden" id="repos-empty">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <p>No projects match your search</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Activity Section -->
+    <section id="activity" class="section activity-section">
+        <div class="section-container">
+            <div class="section-label animate-on-scroll">Activity</div>
+            <h2 class="section-heading animate-on-scroll">Recent GitHub Activity</h2>
+            <div class="activity-feed glass-card animate-on-scroll" id="activity-feed">
+                <div class="skeleton-lines">
+                    <div class="skeleton-line"></div>
+                    <div class="skeleton-line short"></div>
+                    <div class="skeleton-line"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact-section">
+        <div class="section-container">
+            <div class="section-label animate-on-scroll">Contact</div>
+            <h2 class="section-heading animate-on-scroll">Let's Build Something<br>Together</h2>
+            <p class="contact-subtitle animate-on-scroll">Open to collaborations, freelance projects, and interesting ideas.</p>
+            <div class="contact-cards">
+                <a href="mailto:devmasud@proton.me" class="contact-card glass-card animate-on-scroll">
+                    <div class="contact-card-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
                     </div>
-                </div>
+                    <h3>Email</h3>
+                    <p>devmasud@proton.me</p>
+                </a>
+                <a href="" id="contact-github-link" target="_blank" class="contact-card glass-card animate-on-scroll">
+                    <div class="contact-card-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                    </div>
+                    <h3>GitHub</h3>
+                    <p>@dev3Masud</p>
+                </a>
+                <a href="https://dev3masud.github.io" class="contact-card glass-card animate-on-scroll">
+                    <div class="contact-card-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    </div>
+                    <h3>Website</h3>
+                    <p>dev3masud.github.io</p>
+                </a>
             </div>
-            <div class="repos-grid" id="repos-grid">
-                <div class="loading-skeleton">
-                    <div class="skeleton-card"></div>
-                    <div class="skeleton-card"></div>
-                    <div class="skeleton-card"></div>
-                    <div class="skeleton-card"></div>
-                    <div class="skeleton-card"></div>
-                    <div class="skeleton-card"></div>
-                </div>
-            </div>
-            <div class="repos-empty hidden" id="repos-empty">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <p>No repositories found matching your criteria</p>
-            </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <footer id="dashboard-footer">
-        <div class="footer-content">
-            <p>Built with 💜 using the <a href="https://docs.github.com/en/rest" target="_blank" rel="noopener noreferrer">GitHub API</a></p>
-            <p class="footer-update" id="footer-update">Last updated: —</p>
+    <footer id="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="logo-icon small">M</span>
+                <span>dev3Masud</span>
+            </div>
+            <p class="footer-copy">© 2025 Abdullah Al Masud. Built with the GitHub API.</p>
+            <p class="footer-update" id="footer-update">Last synced: —</p>
         </div>
     </footer>
 
